@@ -7,12 +7,6 @@ exports.fetchArticles = () => {
         SELECT * FROM articles;
         `
     ).then((result) => {
-        if(result.rows.length === 0){
-            return Promise.reject({
-                status: 404,
-                msg: 'articles not found',
-            });
-        }
         return result.rows;
     });
 }

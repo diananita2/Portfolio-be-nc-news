@@ -7,12 +7,6 @@ exports.fetchTopics = () => {
         SELECT * FROM topics;
         `
     ).then((result) => {
-        if(result.rows.length === 0){
-            return Promise.reject({
-                status: 404,
-                msg: 'topics not found',
-            });
-        }
         return result.rows;
     });
 }

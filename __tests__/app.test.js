@@ -19,18 +19,21 @@ describe("GET", () => {
       .get('/api/topics')
       .expect(200)
       .then((res) => {
-        expect(res.body.topics).toHaveLength(3)
+        expect(res.body.topics).toHaveLength(3);
+        const topics  = res.body.topics;
+          expect(topics).toBeInstanceOf(Array);
+          topics.forEach((topic) => {
+            expect(topic).toEqual(
+                expect.objectContaining({
+                    description: expect.any(String),
+                    slug: expect.any(String),
+                }),
+            );
+          })
+        })
       })
      
     });
-
-    test.only("topics- return status 404 when wrong url", () => {
-        return request(app)
-        .get('/api/topic')
-        .expect(404)
-        
-       
-      });
 
       test.only("articles- return status 200 with an object with all articles", () => {
         return request(app)
@@ -57,10 +60,3 @@ describe("GET", () => {
         })
        
       });
-  
-      test.only("articles- return status 404 when wrong url", () => {
-          return request(app)
-          .get('/api/article')
-          .expect(404)
-        });
-})
