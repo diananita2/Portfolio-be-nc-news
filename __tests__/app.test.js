@@ -31,4 +31,36 @@ describe("GET", () => {
         
        
       });
+
+      test.only("articles- return status 200 with an object with all articles", () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toHaveLength(12);
+          const articles  = res.body.articles;
+          expect(articles).toBeInstanceOf(Array);
+          articles.forEach((article) => {
+            
+            expect(article).toEqual(
+                expect.objectContaining({
+                    article_id : expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                }),
+            );
+          })
+        })
+       
+      });
+  
+      test.only("articles- return status 404 when wrong url", () => {
+          return request(app)
+          .get('/api/article')
+          .expect(404)
+        });
 })
