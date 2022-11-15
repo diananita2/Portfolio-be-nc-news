@@ -153,7 +153,7 @@ describe("GET", () => {
 });
 
 describe("POST", () => {
-    test.only("comments- return status 200 with the object that has been posted", () => {
+    test.skip("comments- return status 200 with the object that has been posted", () => {
         const newComment = {
             username:'icellusedkars',
             body: 'Not a good article'
