@@ -1,4 +1,7 @@
+
 const { fetchArticles, fetchArticleById, fetchCommentsByArticleId } = require("../models/articles");
+
+
 
 exports.getArticles = (req,res,next) => {
 
@@ -18,6 +21,7 @@ exports.getArticleById = (req,res,next) => {
     });
 };
 
+
 exports.getCommentsByArticleId = (req,res,next) => {
     const {article_id} = req.params;
   
@@ -27,3 +31,4 @@ exports.getCommentsByArticleId = (req,res,next) => {
         next(err);
     });
 };
+

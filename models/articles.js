@@ -36,6 +36,7 @@ exports.fetchArticleById = (article_id) => {
     });
 }
 
+
 exports.fetchCommentsByArticleId = (article_id) => {
     
     if(!article_id.match(/^[0-9]*$/gm)){
@@ -55,3 +56,4 @@ exports.fetchCommentsByArticleId = (article_id) => {
             return result.rows;
         })
     }
+
