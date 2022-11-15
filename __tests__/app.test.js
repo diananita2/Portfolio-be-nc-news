@@ -14,7 +14,7 @@ afterAll(() => {
 })
 
 describe("GET", () => {
-    test.only("topics- return status 200 with an object with all topics", () => {
+    test("topics- return status 200 with an object with all topics", () => {
       return request(app)
       .get('/api/topics')
       .expect(200)
@@ -27,15 +27,15 @@ describe("GET", () => {
                 expect.objectContaining({
                     description: expect.any(String),
                     slug: expect.any(String),
-                }),
-            );
+                })
+            )
           })
         })
       })
      
-    });
+    
 
-      test.only("articles- return status 200 with an object with all articles", () => {
+      test("articles- return status 200 with an object with all articles", () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
@@ -58,5 +58,46 @@ describe("GET", () => {
             );
           })
         })
-       
-      });
+        })
+        
+        test("article- return status 200 with an object with the article with the requested id", () => {
+            return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((res) => {
+              const article  = res.body.article;
+              const date = new Date(article.created_at)
+              
+              expect(article).toEqual({
+                article_id : 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: date.toISOString(),
+                votes: 100,
+              })
+              
+            })
+        })
+
+        test("article- return status 404 with an an error message if the requested article  is not found", () => {
+            return request(app)
+            .get('/api/articles/25')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid request for article id')
+            
+            })
+        })
+
+        test("article- return status 400 with an an error message if the datatype of id in url is not valid", () => {
+            return request(app)
+            .get('/api/articles/invalid')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid request for article id')
+            
+            })
+        })
+});
