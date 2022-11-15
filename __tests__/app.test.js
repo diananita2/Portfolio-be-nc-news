@@ -151,3 +151,26 @@ describe("GET", () => {
                 })
         })
 });
+
+describe("POST", () => {
+    test.only("comments- return status 200 with the object that has been posted", () => {
+        const newComment = {
+            username:'icellusedkars',
+            body: 'Not a good article'
+        }
+        return request(app)
+            .get('/api/articles/2/comments')
+            .send(newComment)
+            .expect(201)
+            .then((res) => {
+                expect(res.body.comment).toMatchObject({
+                    comment_id :19,
+                    author_id: 2,
+                    created_at : expect.any(String),
+                    author : 'icellusedkars',
+                    body: 'Not a good article'
+
+                })
+            })
+    })
+})
