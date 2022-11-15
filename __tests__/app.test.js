@@ -100,4 +100,53 @@ describe("GET", () => {
             
             })
         })
+        test("comments- return status 200 with an array of comments of the article with the specified id", () => {
+            return request(app)
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then((res) => {
+                expect(res.body.comments).toHaveLength(11);
+                const comments = res.body.comments;
+                expect(comments).toBeInstanceOf(Array);
+                comments.forEach((comment) => {
+                    expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id : expect.any(Number),
+                        article_id : 1,
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        votes: expect.any(Number),
+                    }),
+                    );
+                })
+                })
+        })
+
+        test("comments- return status 200 with an empty array if the article does not have comments", () => {
+            return request(app)
+                .get('/api/articles/2/comments')
+                .expect(200)
+                .then((res) => {
+                    expect(res.body.comments).toEqual([])
+                })
+        })
+
+        test("comments- return status 400 with an an error message if the datatype of id in url is not valid", () => {
+            return request(app)
+                .get('/api/articles/invalid/comments')
+                .expect(400)
+                .then((res) => {
+                    expect(res.body.msg).toBe('invalid request for article id')
+                })
+        })
+
+        test("comments- return status 404 with an an error message if the id does not exist", () => {
+            return request(app)
+                .get('/api/articles/50/comments')
+                .expect(404)
+                .then((res) => {
+                    expect(res.body.msg).toBe('article not found')
+                })
+        })
 });
