@@ -22,6 +22,7 @@ exports.fetchCommentsByArticleId = (article_id) => {
 }
 
 exports.addCommentsToArticleId = (article_id,newComment) => {
+ 
     if(!article_id.match(/^[0-9]*$/gm)){
         return Promise.reject({
             status: 400,
@@ -30,13 +31,13 @@ exports.addCommentsToArticleId = (article_id,newComment) => {
     }
     return checkArticleExists(article_id)
         .then(() => {
-        return db.query(`
-            INSERT INTO comments
-            (author,body,article_id,created_at)
-            VALUES
-            ($1,$2,$3,$4)
-            RETURNING *;
-            `,[newComment.username,newComment.body,article_id,Date.now()])
+            return db.query(`
+                INSERT INTO comments
+                (body,article_id,author)
+                VALUES
+                ($1,$2,$3)
+                RETURNING *;
+                `,[newComment.body,article_id,newComment.username])
         })
         .then((result) => {
             return result.rows[0];
