@@ -201,3 +201,52 @@ describe("POST", () => {
             })
     })
 })
+
+describe("PATCH", () => {
+    test("articles- return status 200 with the updated object", () => {
+        const articleUpdates = {
+            inc_votes: 2
+        }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(articleUpdates)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.article).toEqual({
+                    article_id:1,
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: expect.any(String),
+                    votes: 102,
+                })
+            })
+    })
+
+    test("articles- return status 400 with an an error message if the id is not valid", () => {
+        const articleUpdates = {
+            inc_votes: 2
+        }
+        return request(app)
+            .patch('/api/articles/invalid')
+            .send(articleUpdates)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid request for article id')
+            })
+    })
+
+    test("articles- return status 404 with an an error message if the id is not found", () => {
+        const articleUpdates = {
+            inc_votes: 2
+        }
+        return request(app)
+            .patch('/api/articles/100')
+            .send(articleUpdates)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.msg).toBe('article not found')
+            })
+    })
+})
