@@ -1,4 +1,10 @@
+
 const { fetchArticles, fetchArticleById } = require("../models/articles");
+
+
+
+
+
 
 exports.getArticles = (req,res,next) => {
 
@@ -17,4 +23,5 @@ exports.getArticleById = (req,res,next) => {
         next(err);
     });
 };
+
 

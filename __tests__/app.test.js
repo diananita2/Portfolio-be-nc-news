@@ -100,7 +100,6 @@ describe("GET", () => {
             
             })
         })
-
         test("comments- return status 200 with an array of comments of the article with the specified id", () => {
             return request(app)
                 .get('/api/articles/1/comments')
