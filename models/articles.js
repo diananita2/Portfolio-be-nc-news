@@ -12,7 +12,8 @@ exports.fetchArticles = () => {
 }
 
 exports.fetchArticleById = (article_id) => {
-    if(typeof(article_id) != Number){
+    
+    if(!article_id.match(/^[0-9]*$/gm)){
         return Promise.reject({
             status: 400,
             msg: 'invalid request for article id'
@@ -25,9 +26,8 @@ exports.fetchArticleById = (article_id) => {
         `,[article_id]
     ).then((result) => {
         if(result.rows.length === 0){
-            console.log('promise reject')
             return Promise.reject({
-                status: 400,
+                status: 404,
                 msg: 'invalid request for article id'
             })
         }
