@@ -33,7 +33,26 @@ describe("GET", () => {
         })
       })
      
-    
+      test("users- return status 200 with an object with all users", () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((res) => {
+          expect(res.body.users).toHaveLength(4);
+          const users  = res.body.users;
+            expect(users).toBeInstanceOf(Array);
+            users.forEach((user) => {
+              expect(user).toEqual(
+                  expect.objectContaining({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String),
+                  })
+              )
+            })
+          })
+        })
+       
 
       test("articles- return status 200 with an object with all articles", () => {
         return request(app)
