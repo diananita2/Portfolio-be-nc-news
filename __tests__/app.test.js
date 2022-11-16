@@ -249,4 +249,16 @@ describe("PATCH", () => {
                 expect(res.body.msg).toBe('article not found')
             })
     })
+    test("articles- return status 400 with an an error message if the votes datatype is not valid", () => {
+        const articleUpdates = {
+            inc_votes: 'bad'
+        }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(articleUpdates)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid datatype')
+            })
+    })
 })

@@ -22,6 +22,9 @@ exports.getArticleById = (req,res,next) => {
 exports.patchArticleById = (req,res,next) => {
     const {article_id} = req.params;
     const articleUpdates = req.body;
+    if(typeof(Object.values(articleUpdates)[0]) != 'number'){
+        res.status(400).send({msg:'invalid datatype'});
+    }
     updateArticleById(article_id,articleUpdates).then((result) => {
        res.status(200).send({article:result});
     }).catch((err) => {
