@@ -35,5 +35,32 @@ exports.fetchArticleById = (article_id) => {
     });
 }
 
+exports.updateArticleById = (article_id,articleUpdates) => {
+    
+    if(!article_id.match(/^[0-9]*$/gm)){
+        return Promise.reject({
+            status: 400,
+            msg: 'invalid request for article id'
+        })
+    }
+    
+    return db.query(
+        `
+        UPDATE articles
+        SET votes = votes + $2
+        WHERE article_id = $1
+        RETURNING*;
+        `,[article_id,articleUpdates.inc_votes]
+    ).then((result) => {
+        
+        if(result.rows.length === 0){
+            return Promise.reject({
+                status: 404,
+                msg: 'article not found'
+            })
+        }
+        return result.rows[0];
+    });
+}
 
 
