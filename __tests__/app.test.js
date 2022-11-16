@@ -33,7 +33,26 @@ describe("GET", () => {
         })
       })
      
-    
+      test("users- return status 200 with an object with all users", () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((res) => {
+          expect(res.body.users).toHaveLength(4);
+          const users  = res.body.users;
+            expect(users).toBeInstanceOf(Array);
+            users.forEach((user) => {
+              expect(user).toEqual(
+                  expect.objectContaining({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String),
+                  })
+              )
+            })
+          })
+        })
+       
 
       test("articles- return status 200 with an object with all articles", () => {
         return request(app)
@@ -59,7 +78,74 @@ describe("GET", () => {
           })
         })
         })
+        test("articles- return status 200 with an array of sorted ASC articles", () => {
+            return request(app)
+            .get('/api/articles?order=asc')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSorted({descending:false});
+            })
+        })
+        test("articles- return status 200 with an array of articles that are filtered by topic", () => {
+            return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then((res) => {
+                const articles  = res.body.articles;
+                expect(articles).toBeInstanceOf(Array);
+                articles.forEach((article) => {
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        article_id : expect.any(Number),
+                        title: expect.any(String),
+                        topic: 'cats',
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                    }),
+                );
+              })
+
+        });
+            
         
+        })
+        test("articles- return status 200 with an array of articles ordered by author in descending order", () => {
+            return request(app)
+            .get('/api/articles?sort_by=author')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSortedBy('author',{descending:true});
+            })
+        })
+        test("articles- return status 200 with an array of articles ordered by votes in ascending order", () => {
+            return request(app)
+            .get('/api/articles?sort_by=votes&order=asc')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSortedBy('votes',{descending:false});
+            })
+        })
+        test("articles- return status 200 with an array of articles filtered by topic and return an empty array", () => {
+            return request(app)
+            .get('/api/articles?topic=paper&sort_by=votes&order=asc')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSortedBy('votes',{descending:false});
+                const articles  = res.body.articles;
+                expect(articles).toBeInstanceOf(Array);
+                expect(articles).toEqual([]);
+              })
+        })
+        test("articles- return status 400 and a message with invalid query", () => {
+            return request(app)
+            .get('/api/articles?sort_by=something&order=asc')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid query');
+              })
+        })
         test("article- return status 200 with an object with the article with the requested id", () => {
             return request(app)
             .get('/api/articles/1')
