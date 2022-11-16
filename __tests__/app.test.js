@@ -150,3 +150,54 @@ describe("GET", () => {
                 })
         })
 });
+
+describe("POST", () => {
+    test("comments- return status 201 with the object that has been posted", () => {
+        const newComment = {
+            username:'icellusedkars',
+            body: 'Not a good article'
+        }
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send(newComment)
+            .expect(201)
+            .then((res) => {
+                expect(res.body.comment).toMatchObject({
+                    comment_id :19,
+                    article_id: 2,
+                    created_at : expect.any(String),
+                    author : 'icellusedkars',
+                    body: 'Not a good article'
+
+                })
+            })
+    })
+
+    test("comments- return status 404 with an an error message if the id does not exist", () => {
+        const newComment = {
+            username:'icellusedkars',
+            body: 'Not a good article'
+        }
+        return request(app)
+            .post('/api/articles/50/comments')
+            .send(newComment)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.msg).toBe('article not found')
+            })
+    })
+
+    test("comments- return status 400 with an an error message if the id is not valid", () => {
+        const newComment = {
+            username:'icellusedkars',
+            body: 'Not a good article'
+        }
+        return request(app)
+            .post('/api/articles/invalid/comments')
+            .send(newComment)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid request for article id')
+            })
+    })
+})
