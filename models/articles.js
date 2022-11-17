@@ -5,7 +5,6 @@ exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
     const validOrder = ['asc','desc'];
     const validSortByColumns = ['title','topic','author','body','created_at','votes']
     if(!validOrder.includes(order) || !validSortByColumns.includes(sort_by)){
-        console.log(topic, sort_by,order)
         return Promise.reject({status:400,msg:'invalid query'})
     }
     let queryStr = `SELECT * FROM articles`;
