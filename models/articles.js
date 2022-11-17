@@ -30,10 +30,8 @@ exports.fetchArticleById = (article_id) => {
             msg: 'invalid request for article id'
         })
     }
-    return checkArticleExists(article_id)
-        .then(() =>{
-
-           return db.query(
+    
+        return db.query(
             `
             SELECT articles.*, COUNT(comments.comment_id) AS comments_count FROM comments
             LEFT JOIN articles ON comments.article_id =  articles.article_id
@@ -41,9 +39,12 @@ exports.fetchArticleById = (article_id) => {
             GROUP BY articles.article_id;
             `,[article_id]
         ) .then((result) => {
+            if(result.rows.length === 0){
+                return Promise.reject({status:404,msg:'article not found'})
+            }
             return result.rows[0];
         });
-    })
+    
 }
 
 exports.updateArticleById = (article_id,articleUpdates) => {
