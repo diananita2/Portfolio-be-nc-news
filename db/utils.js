@@ -11,3 +11,5 @@ exports.checkArticleExists = (article_id) => {
         }
     })
 }
+
+

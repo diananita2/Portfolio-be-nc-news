@@ -10,7 +10,7 @@ beforeAll(() => {
 })
 
 afterAll(() => {
-    return db.end();
+   if(db) return db.end();
 })
 
 describe("GET", () => {
@@ -154,15 +154,38 @@ describe("GET", () => {
               const article  = res.body.article;
               const date = new Date(article.created_at)
               
-              expect(article).toEqual({
-                article_id : 1,
-                title: "Living in the shadow of a great man",
-                topic: "mitch",
-                author: "butter_bridge",
-                body: "I find this existence challenging",
-                created_at: date.toISOString(),
-                votes: 100,
-              })
+              expect(article).toMatchObject(
+                expect.objectContaining({
+                    article_id : 1,
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: date.toISOString(),
+                    votes: 100,
+                    
+                })
+              )
+              
+              
+            })
+        })
+
+        test("article- return status 200 with an object with the article with the requested id and the new property of comments_count", () => {
+            return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((res) => {
+              const article  = res.body.article;
+              const date = new Date(article.created_at)
+              
+              expect(article).toMatchObject(
+                expect.objectContaining({
+                    article_id : 1,
+                    comments_count: '11',
+                })
+              )
+              
               
             })
         })
@@ -172,8 +195,7 @@ describe("GET", () => {
             .get('/api/articles/25')
             .expect(404)
             .then((res) => {
-                expect(res.body.msg).toBe('invalid request for article id')
-            
+                expect(res.body.msg).toBe('article not found')
             })
         })
 
@@ -235,6 +257,9 @@ describe("GET", () => {
                     expect(res.body.msg).toBe('article not found')
                 })
         })
+
+        
+        
 });
 
 describe("POST", () => {
@@ -306,6 +331,7 @@ describe("PATCH", () => {
                     body: "I find this existence challenging",
                     created_at: expect.any(String),
                     votes: 102,
+                    
                 })
             })
     })
