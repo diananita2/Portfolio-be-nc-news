@@ -14,7 +14,7 @@ afterAll(() => {
 })
 
 describe("GET", () => {
-    test.only("topics- return status 200 with an object with all topics", () => {
+    test("topics- return status 200 with an object with all topics", () => {
       return request(app)
       .get('/api/topics')
       .expect(200)
@@ -35,7 +35,7 @@ describe("GET", () => {
      
     });
 
-      test.only("articles- return status 200 with an object with all articles", () => {
+      test("articles- return status 200 with an object with all articles", () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
@@ -54,6 +54,7 @@ describe("GET", () => {
                     body: expect.any(String),
                     created_at: expect.any(String),
                     votes: expect.any(Number),
+                    comments_count: expect.any(String),
                 }),
             );
           })
