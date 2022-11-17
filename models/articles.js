@@ -1,5 +1,5 @@
 const db = require('../db/connection.js');
-const { addCommentsCountToArticle, checkArticleExists } = require('../db/utils.js');
+const { checkArticleExists } = require('../db/utils.js');
 
 exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
    
@@ -32,20 +32,18 @@ exports.fetchArticleById = (article_id) => {
     }
     return checkArticleExists(article_id)
         .then(() =>{
-        return addCommentsCountToArticle(article_id).then((res) => {
+
            return db.query(
             `
-            SELECT * FROM articles
-            WHERE article_id = $1;
+            SELECT articles.*, COUNT(comments.comment_id) AS comments_count FROM comments
+            LEFT JOIN articles ON comments.article_id =  articles.article_id
+            WHERE articles.article_id = $1
+            GROUP BY articles.article_id;
             `,[article_id]
         ) .then((result) => {
-            
             return result.rows[0];
         });
-        })
-        
     })
-    
 }
 
 exports.updateArticleById = (article_id,articleUpdates) => {
