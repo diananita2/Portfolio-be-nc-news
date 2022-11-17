@@ -1,12 +1,23 @@
 const db = require('../db/connection.js');
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
+   
+    const validOrder = ['asc','desc'];
+    const validSortByColumns = ['title','topic','author','body','created_at','votes']
+    if(!validOrder.includes(order) || !validSortByColumns.includes(sort_by)){
+        return Promise.reject({status:400,msg:'invalid query'})
+    }
+    let queryStr = `SELECT * FROM articles`;
+    let queryValues = [];
+    if(topic){
+        queryStr += ` WHERE topic = $1`;
+        queryValues.push(topic);
+    }
+
+    queryStr += ` ORDER BY ${sort_by} ${order.toUpperCase()}`;
+    queryStr += ';';
     
-    return db.query(
-        `
-        SELECT * FROM articles;
-        `
-    ).then((result) => {
+    return db.query(queryStr,queryValues).then((result) => {
         return result.rows;
     });
 }
