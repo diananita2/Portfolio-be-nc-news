@@ -10,7 +10,7 @@ beforeAll(() => {
 })
 
 afterAll(() => {
-    return db.end();
+   if(db) return db.end();
 })
 
 describe("GET", () => {
@@ -162,6 +162,7 @@ describe("GET", () => {
                 body: "I find this existence challenging",
                 created_at: date.toISOString(),
                 votes: 100,
+                comments_count: 11,
               })
               
             })
@@ -172,8 +173,7 @@ describe("GET", () => {
             .get('/api/articles/25')
             .expect(404)
             .then((res) => {
-                expect(res.body.msg).toBe('invalid request for article id')
-            
+                expect(res.body.msg).toBe('article not found')
             })
         })
 
@@ -306,6 +306,7 @@ describe("PATCH", () => {
                     body: "I find this existence challenging",
                     created_at: expect.any(String),
                     votes: 102,
+                    comments_count: 11,
                 })
             })
     })
