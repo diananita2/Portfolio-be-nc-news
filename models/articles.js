@@ -16,9 +16,9 @@ exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
         queryStr += ` WHERE topic = $1`;
         queryValues.push(topic);
     }
-
-    queryStr += ` ORDER BY ${sort_by} ${order.toUpperCase()}`;
-    queryStr += `GROUP BY articles.article_id;`
+    queryStr += ` GROUP BY articles.article_id`
+    queryStr += ` ORDER BY ${sort_by} ${order.toUpperCase()};`;
+    
     
     return db.query(queryStr,queryValues).then((result) => {
         return result.rows;
