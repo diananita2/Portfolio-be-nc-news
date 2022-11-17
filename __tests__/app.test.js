@@ -336,3 +336,27 @@ describe("PATCH", () => {
             })
     })
 })
+describe("DELETE", () => {
+    test("comment - return status 204 with no content", () => {
+        return request(app)
+            .delete('/api/comments/1')
+            .expect(204);
+    })
+    test("comment - return status 404 when comment doesnt exist", () => {
+        return request(app)
+            .delete('/api/comments/100')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.msg).toBe('comment not found')
+            })
+    })
+    test("comment - return status 400 when the request has the wrond datatype", () => {
+        return request(app)
+            .delete('/api/comments/invalid')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid request for comment id')
+            })
+    })
+    
+})
