@@ -10,7 +10,7 @@ beforeAll(() => {
 })
 
 afterAll(() => {
-    return db.end();
+   if(db) return db.end();
 })
 
 describe("GET", () => {
@@ -162,6 +162,7 @@ describe("GET", () => {
                 body: "I find this existence challenging",
                 created_at: date.toISOString(),
                 votes: 100,
+                comments_count: 11,
               })
               
             })
@@ -172,8 +173,7 @@ describe("GET", () => {
             .get('/api/articles/25')
             .expect(404)
             .then((res) => {
-                expect(res.body.msg).toBe('invalid request for article id')
-            
+                expect(res.body.msg).toBe('article not found')
             })
         })
 
@@ -306,6 +306,7 @@ describe("PATCH", () => {
                     body: "I find this existence challenging",
                     created_at: expect.any(String),
                     votes: 102,
+                    comments_count: 11,
                 })
             })
     })
@@ -335,7 +336,21 @@ describe("PATCH", () => {
                 expect(res.body.msg).toBe('article not found')
             })
     })
+
+    test("articles- return status 400 with an an error message if the votes datatype is not valid", () => {
+        const articleUpdates = {
+            inc_votes: 'bad'
+        }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(articleUpdates)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.msg).toBe('invalid datatype')
+            })
+    })
 })
+
 describe("DELETE", () => {
     test("comment - return status 204 with no content", () => {
         return request(app)
@@ -358,5 +373,4 @@ describe("DELETE", () => {
                 expect(res.body.msg).toBe('invalid request for comment id')
             })
     })
-    
 })
