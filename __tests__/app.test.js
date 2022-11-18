@@ -14,6 +14,20 @@ afterAll(() => {
 })
 
 describe("GET", () => {
+    test.only("endpoints - responds with the JSON file of all possible endpoints from the api", () => {
+       return request(app)
+      .get('/api')
+      .then((res) => {
+        expect(res.body).toMatchObject(
+            expect.objectContaining({
+                "GET /api": {
+                    "description": "serves up a json representation of all the available endpoints of the api"
+                  }
+            })
+        )
+      })
+    })
+    
     test("topics- return status 200 with an object with all topics", () => {
       return request(app)
       .get('/api/topics')

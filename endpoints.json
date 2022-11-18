@@ -9,8 +9,21 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users":[
+        {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all artciles",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
@@ -23,5 +36,72 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article__id": {
+    "description": "serves an object with the article that has that requested id",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": 100,
+          "comment_count": 11
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article__id/comments": {
+    "description": "serves an array of comments for the article with requested id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          "votes": 16,
+          "author": "butter_bridge",
+          "article_id": 9,
+          "created_at": 1586179020000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments" : {
+    "description": "adds and responds with a new comment belonging to the article with specified id",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "body": "Oh, what an article!",
+          "username": "butter_bridge"
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id" : {
+    "description": "updates the votes property of the article with the changes in the body of the request and responds with the updated article",
+    "queries": [],
+    "body" : {"inc_votes": "newVote"},
+    "exampleResponse": {
+      "updatedArticle": [
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": "100 + newVote",
+          "comment_count": 11
+        }
+      ]
+    }
+  },
+  "DELETE /api/articles/:article_id" : {
+    "description": "deletes the article and responds with 204 status code and no content",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
