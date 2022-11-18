@@ -73,6 +73,7 @@ describe("GET", () => {
                     body: expect.any(String),
                     created_at: expect.any(String),
                     votes: expect.any(Number),
+                    comments_count: expect.any(String),
                 }),
             );
           })

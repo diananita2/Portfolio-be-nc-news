@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
 const { checkArticleExists } = require('../db/utils.js');
 
+
 exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
    
     const validOrder = ['asc','desc'];
@@ -8,15 +9,16 @@ exports.fetchArticles = (topic,sort_by = 'created_at',order = 'desc') => {
     if(!validOrder.includes(order) || !validSortByColumns.includes(sort_by)){
         return Promise.reject({status:400,msg:'invalid query'})
     }
-    let queryStr = `SELECT * FROM articles`;
+    let queryStr = `SELECT articles.*, COUNT(comments.comment_id) AS comments_count FROM comments
+    RIGHT JOIN articles ON comments.article_id = articles.article_id`;
     let queryValues = [];
     if(topic){
         queryStr += ` WHERE topic = $1`;
         queryValues.push(topic);
     }
-
-    queryStr += ` ORDER BY ${sort_by} ${order.toUpperCase()}`;
-    queryStr += ';';
+    queryStr += ` GROUP BY articles.article_id`
+    queryStr += ` ORDER BY ${sort_by} ${order.toUpperCase()};`;
+    
     
     return db.query(queryStr,queryValues).then((result) => {
         return result.rows;
