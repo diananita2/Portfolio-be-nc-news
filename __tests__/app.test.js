@@ -14,7 +14,7 @@ afterAll(() => {
 })
 
 describe("GET", () => {
-    test.only("endpoints - responds with the JSON file of all possible endpoints from the api", () => {
+    test("endpoints - responds with the JSON file of all possible endpoints from the api", () => {
        return request(app)
       .get('/api')
       .then((res) => {
